@@ -3,6 +3,7 @@ package bobagento;
 import java.util.List;
 
 import webToJava.Browser;
+import bobagento.Bobagento.Post;
 
 public class PrintBobagento {
 
