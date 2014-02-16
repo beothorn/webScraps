@@ -1,7 +1,7 @@
 package legendasTV;
 
-import webToJava.annotations.Selector;
-import webToJava.elements.Link;
+import webGrude.annotations.Selector;
+import webGrude.elements.Link;
 
 @Selector(".item")
 public class Legenda {

@@ -1,9 +1,9 @@
 package legendasTV;
 
-import webToJava.Browser;
-import webToJava.annotations.PageURL;
+import webGrude.Browser;
+import webGrude.annotations.Page;
 
-@PageURL("http://legendas.tv/")
+@Page("http://legendas.tv/")
 public class LegendasTv {
 
 	public static void main(final String[] args) {

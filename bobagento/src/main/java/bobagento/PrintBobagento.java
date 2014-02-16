@@ -1,6 +1,6 @@
 package bobagento;
 
-import static webToJava.Browser.open;
+import static webGrude.Browser.open;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class PrintBobagento {
 			System.out.println("--------------------------------");
 			System.out.println(post.titulo);
 			System.out.println();
-			System.out.println(post.texto.html);
+			System.out.println(post.texto.html());
 		}
 		System.out.println(bobagento.footer);
 	}

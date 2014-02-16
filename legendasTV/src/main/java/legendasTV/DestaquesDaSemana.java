@@ -2,7 +2,7 @@ package legendasTV;
 
 import java.util.List;
 
-import webToJava.annotations.Selector;
+import webGrude.annotations.Selector;
 
 @Selector(".slider_wrapper")
 public class DestaquesDaSemana {
