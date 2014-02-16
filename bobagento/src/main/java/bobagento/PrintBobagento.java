@@ -8,24 +8,25 @@ import bobagento.Bobagento.Post;
 
 public class PrintBobagento {
 
+	private static final int PAGES = 3;
+
 	public static void main(final String[] args) {
-		final Bobagento bobagento = open(Bobagento.class);
-		
-		final List<String> links = bobagento.header.links;
-		final StringBuilder menu = new StringBuilder();
-		for (final String opcao : links) {
-			menu.append(opcao+" | ");
+		Bobagento bobagento = open(Bobagento.class);
+
+		for (int i = 0; i < PAGES; i++) {
+			printPosts(bobagento);
+			bobagento = bobagento.nextPage.visit();
 		}
-		System.out.println(menu.toString().trim());
-		
+	}
+
+	private static void printPosts(final Bobagento bobagento) {
 		final List<Post> posts = bobagento.posts;
 		for (final Post post : posts) {
 			System.out.println("--------------------------------");
 			System.out.println(post.titulo);
-			System.out.println();
-			System.out.println(post.texto.html());
+//			System.out.println();
+//			System.out.println(post.texto.html());
 		}
-		System.out.println(bobagento.footer);
 	}
 
 }
