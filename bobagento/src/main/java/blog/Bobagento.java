@@ -1,4 +1,4 @@
-package bobagento;
+package blog;
 
 import java.util.List;
 
@@ -12,12 +12,14 @@ import webGrude.elements.Visitable;
 @Page("http://bobagento.com/")
 public class Bobagento {
 
-	@Selector(".post") static public class Post {
+	@Selector(".post") static public class BobagentoPost{
 		@Selector(".tit h2") public String titulo;
 		@Selector(".entry") public Element texto;
 	}
 
-	public List<Post> posts;
+	public List<BobagentoPost> posts;
 	
 	@Selector(".next") @Link(Bobagento.class) public Visitable<Bobagento> nextPage;
+	
+
 }
