@@ -15,6 +15,7 @@ public class Bobagento {
 	@Selector(".post") static public class BobagentoPost{
 		@Selector(".tit h2") public String titulo;
 		@Selector(".entry") public Element texto;
+		@Selector(".data") public String data;
 	}
 
 	public List<BobagentoPost> posts;
