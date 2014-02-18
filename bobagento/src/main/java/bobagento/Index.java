@@ -12,9 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import rss.Channel;
 import rss.Item;
+import rss.Rss;
 import webGrude.annotations.Page;
+import webGrude.elements.Visitable;
 import blog.Bobagento;
 import blog.Bobagento.BobagentoPost;
+import blog.NaoIntendo;
+import blog.NaoIntendo.NaoIntendoPost;
 import blog.NaoSalvo;
 
 import com.thoughtworks.xstream.XStream;
@@ -24,6 +28,18 @@ public class Index extends HttpServlet {
 	
 	private static final long serialVersionUID = -4915999199672417058L;
 
+	PrintWriter out;
+
+	private Bobagento bobagento;
+	private NaoSalvo naoSalvo;
+	private NaoIntendo naoIntendo;
+
+	private Visitable<Bobagento> bobagentoNextPage;
+
+	private Visitable<NaoSalvo> naoSalvoNextPage;
+
+	private Visitable<NaoIntendo> naoIntendoNextPage;
+	
 	public static void main(final String[] args) {
 		final NaoSalvo naoSalvo = open(NaoSalvo.class);
 		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
@@ -44,9 +60,11 @@ public class Index extends HttpServlet {
 		response.setContentType("application/rss+xml");
 		final XStream xstream = new XStream(new DomDriver());
 
+		xstream.alias("rss",Rss.class); 
 		xstream.alias("channel",Channel.class); 
 		xstream.alias("item",Item.class); 
 		xstream.addImplicitCollection(Channel.class, "item"); 
+		xstream.useAttributeFor(Rss.class, "version");
 		
 		final Channel channel = new Channel();
 		channel
@@ -77,17 +95,8 @@ public class Index extends HttpServlet {
 			count++;
 		}
 		
+		final String rssOutput = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n" + xstream.toXML(channel);
 		
-		
-		final String xml = xstream.toXML(channel);
-		final String rssOutput = 
-				"<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>\n" + 
-				"<rss version=\"2.0\">\n"+
-				xml+
-				"\n</rss>";
-		
-		
-		PrintWriter out;
 		try {
 			out = response.getWriter();
 		} catch (final IOException e) {
@@ -98,7 +107,6 @@ public class Index extends HttpServlet {
 	
 	private void writePage(final HttpServletResponse response) {
 		response.setContentType("text/html");
-		PrintWriter out;
 		try {
 			out = response.getWriter();
 		} catch (final IOException e) {
@@ -129,25 +137,49 @@ public class Index extends HttpServlet {
 				+ "\n<body>\n"
 				+ "<div id=\"Content\">\n");
 		
-		final Bobagento bobagento = open(Bobagento.class);
+		if(bobagento == null)
+			bobagento = open(Bobagento.class);
+		else
+			bobagento = bobagentoNextPage.visit();
+		
 		for (final BobagentoPost  post : bobagento.posts) {
-			out.print("<div class=\"post\">\n");
-			out.print("<h1>");
-			out.print(post.titulo);
-			out.print("</h1>");
-			out.print(post.texto.html());
-			out.print("</div>\n");
+			printPost(post.titulo, post.texto.html());
 		}
 		
-//		final NaoSalvo naoSalvo = open(NaoSalvo.class);
-//		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
-//			out.print("<h1>");
-//			out.print(post.titulo);
-//			out.print("</h1>");
-//			out.print(post.texto.html());
-//		}
-//		
+		bobagentoNextPage = bobagento.nextPage;
+		
+		if(naoSalvo == null)
+			naoSalvo = open(NaoSalvo.class);
+		else
+			naoSalvo = naoSalvoNextPage.visit();
+		
+		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
+			printPost(post.titulo, post.texto.html());
+		}
+		
+		naoSalvoNextPage = naoSalvo.nextPage;
+		
+		if(naoIntendo == null)
+			naoIntendo = open(NaoIntendo.class);
+		else
+			naoIntendo= naoIntendoNextPage.visit();
+		
+		for (final NaoIntendoPost post : naoIntendo.posts) {
+			printPost(post.titulo, post.texto.html());
+		}
+		
+		naoIntendoNextPage = naoIntendo.nextPage;
+		
 		out.print("</div>\n</body>\n</html>");
+	}
+
+	private void printPost(final String titulo, final String html) {
+		out.print("<div class=\"post\">\n");
+		out.print("<h1>");
+		out.print(titulo);
+		out.print("</h1>");
+		out.print(html);
+		out.print("</div>\n");
 	}
 
 }

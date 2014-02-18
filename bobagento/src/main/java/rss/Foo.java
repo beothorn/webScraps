@@ -5,12 +5,20 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Foo {
 	
+	public static void main(final String[] args) {
+		Foo.test();
+	}
+	
 	public static String test() {
 		final XStream xstream = new XStream(new DomDriver());
 
+		xstream.alias("rss",Rss.class); 
 		xstream.alias("channel",Channel.class); 
 		xstream.alias("item",Item.class); 
 		xstream.addImplicitCollection(Channel.class, "item"); 
+		xstream.useAttributeFor(Rss.class, "version");
+		
+		final Rss rss = new Rss();
 		
 		final Channel channel = new Channel();
 		channel
@@ -24,6 +32,10 @@ public class Foo {
 			.setLanguage("")
 		;
 		
+		rss
+			.setVersion("2.0")
+			.setChannel(channel);
+		
 		final Item item = new Item();
 		item
 			.setTitle("Example entry")
@@ -35,12 +47,9 @@ public class Foo {
 		
 		channel.addItem(item);
 		
-		final String xml = xstream.toXML(channel);
+		final String xml = xstream.toXML(rss);
 		final String rssOutput = 
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + 
-				"<rss version=\"2.0\">\n"+
-				xml+
-				"\n</rss>";
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"+xml;
 		System.out.println(rssOutput);
 		return rssOutput;		
 	}
