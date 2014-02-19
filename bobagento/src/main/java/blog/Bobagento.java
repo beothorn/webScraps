@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 
-import webGrude.annotations.Link;
 import webGrude.annotations.Page;
 import webGrude.annotations.Selector;
-import webGrude.elements.Visitable;
+import webGrude.elements.Link;
 
 @Page("http://bobagento.com/")
 public class Bobagento {
@@ -20,7 +19,7 @@ public class Bobagento {
 
 	public List<BobagentoPost> posts;
 	
-	@Selector(".next") @Link(Bobagento.class) public Visitable<Bobagento> nextPage;
+	@Selector(".next") public Link<Bobagento> nextPage;
 	
 
 }

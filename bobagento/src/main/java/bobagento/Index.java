@@ -14,14 +14,15 @@ import rss.Channel;
 import rss.Item;
 import rss.Rss;
 import webGrude.annotations.Page;
-import webGrude.elements.Visitable;
+import webGrude.elements.Link;
 import blog.Bobagento;
 import blog.Bobagento.BobagentoPost;
 import blog.Insoonia;
+import blog.Insoonia.InsooniaPost;
 import blog.NaoIntendo;
+import blog.NaoIntendo.NaoIntendoPost;
 import blog.NaoSalvo;
 import blog.Sedentario;
-import blog.Sedentario.SedentarioPost;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -38,15 +39,16 @@ public class Index extends HttpServlet {
 	private Insoonia insoonia;
 	private Sedentario sedentario;
 
-	private Visitable<Bobagento> bobagentoNextPage;
-	private Visitable<NaoSalvo> naoSalvoNextPage;
-	private Visitable<NaoIntendo> naoIntendoNextPage;
-	private Visitable<Insoonia> insooniaNextPage;
-	private Visitable<Sedentario> sedentarioNextPage;
+	private Link<Bobagento> bobagentoNextPage;
+	private Link<NaoSalvo> naoSalvoNextPage;
+	private Link<NaoIntendo> naoIntendoNextPage;
+	private Link<Insoonia> insooniaNextPage;
+	private Link<Sedentario> sedentarioNextPage;
 	
 	public static void main(final String[] args) {
-		final NaoSalvo naoSalvo = open(NaoSalvo.class);
-		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
+		Bobagento blog = open(Bobagento.class);
+		blog = blog.nextPage.visit();
+		for (final BobagentoPost post : blog.posts) {
 			System.out.println("<h1>");
 			System.out.println(post.titulo);
 			System.out.println("</h1>");
@@ -141,61 +143,61 @@ public class Index extends HttpServlet {
 				+ "\n<body>\n"
 				+ "<div id=\"Content\">\n");
 		
-//		if(bobagento == null)
-//			bobagento = open(Bobagento.class);
-//		else
-//			bobagento = bobagentoNextPage.visit();
-//		
-//		for (final BobagentoPost  post : bobagento.posts) {
-//			printPost(post.titulo, post.texto.html());
-//		}
-//		
-//		bobagentoNextPage = bobagento.nextPage;
-//		
-//		if(naoSalvo == null)
-//			naoSalvo = open(NaoSalvo.class);
-//		else
-//			naoSalvo = naoSalvoNextPage.visit();
-//		
-//		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
-//			printPost(post.titulo, post.texto.html());
-//		}
-//		
-//		naoSalvoNextPage = naoSalvo.nextPage;
-//		
-//		if(naoIntendo == null)
-//			naoIntendo = open(NaoIntendo.class);
-//		else
-//			naoIntendo= naoIntendoNextPage.visit();
-//		
-//		for (final NaoIntendoPost post : naoIntendo.posts) {
-//			printPost(post.titulo, post.texto.html());
-//		}
-//		
-//		naoIntendoNextPage = naoIntendo.nextPage;
-//
-//		
-//		if(insoonia == null)
-//			insoonia = open(Insoonia.class);
-//		else
-//			insoonia= insooniaNextPage.visit();
-//		
-//		for (final InsooniaPost post : insoonia.posts) {
-//			printPost(post.titulo, post.texto.html());
-//		}
-//		
-//		insooniaNextPage = insoonia.nextPage;
-		
-		if(sedentario == null)
-			sedentario = open(Sedentario.class);
+		if(bobagento == null)
+			bobagento = open(Bobagento.class);
 		else
-			sedentario= sedentarioNextPage.visit();
+			bobagento = bobagentoNextPage.visit();
 		
-		for (final SedentarioPost post : sedentario.posts) {
+		for (final BobagentoPost  post : bobagento.posts) {
 			printPost(post.titulo, post.texto.html());
 		}
 		
-		sedentarioNextPage = sedentario.nextPage;
+		bobagentoNextPage = bobagento.nextPage;
+		
+		if(naoSalvo == null)
+			naoSalvo = open(NaoSalvo.class);
+		else
+			naoSalvo = naoSalvoNextPage.visit();
+		
+		for (final blog.NaoSalvo.NaoSalvoPost post : naoSalvo.posts) {
+			printPost(post.titulo, post.texto.html());
+		}
+		
+		naoSalvoNextPage = naoSalvo.nextPage;
+		
+		if(naoIntendo == null)
+			naoIntendo = open(NaoIntendo.class);
+		else
+			naoIntendo= naoIntendoNextPage.visit();
+		
+		for (final NaoIntendoPost post : naoIntendo.posts) {
+			printPost(post.titulo, post.texto.html());
+		}
+		
+		naoIntendoNextPage = naoIntendo.nextPage;
+
+		
+		if(insoonia == null)
+			insoonia = open(Insoonia.class);
+		else
+			insoonia= insooniaNextPage.visit();
+		
+		for (final InsooniaPost post : insoonia.posts) {
+			printPost(post.titulo, post.texto.html());
+		}
+		
+		insooniaNextPage = insoonia.nextPage;
+		
+//		if(sedentario == null)
+//			sedentario = open(Sedentario.class);
+//		else
+//			sedentario= sedentarioNextPage.visit();
+//		
+//		for (final SedentarioPost post : sedentario.posts) {
+//			printPost(post.titulo, post.texto.html());
+//		}
+//		
+//		sedentarioNextPage = sedentario.nextPage;
 		
 		out.print("</div>\n</body>\n</html>");
 	}
