@@ -1,0 +1,71 @@
+<html>
+<style>
+body {
+	margin:50px 0px; padding:0px;
+	text-align:center;
+}
+	
+.post{
+	border:1px dashed #333;
+	background-color:#eee;
+	margin:15px auto;
+	text-align:center;
+	padding:15px;
+}
+#Content {
+	width:900px;
+	margin:0px auto;
+	text-align:left;
+	padding:15px;
+}
+</style>
+
+<script src="js/3rd/jquery-1.11.1.js"></script>
+<script src="js/3rd/underscore-min.js"></script>
+
+<body>
+<div id="Content">
+</div>
+		
+<script>
+
+	function addToRemoved(title, element){
+		if(!localStorage["removedPosts"]){
+			var removed = [];
+		}else{
+			var removed = JSON.parse(localStorage["removedPosts"]);
+		}
+		removed.push(title);
+		localStorage["removedPosts"] = JSON.stringify(removed);
+		$(element).parent().hide();
+	}
+	
+	function shouldShow(title){
+		if(!localStorage["removedPosts"]){
+			var removed = [];
+		}else{
+			var removed = JSON.parse(localStorage["removedPosts"]);
+		}
+		return !_.contains(removed, title);
+	}
+
+	function appendBlog(blog){
+		$.getJSON( "./"+blog, function( data ) { 
+			_.each(data.posts,function(each){
+				if(shouldShow(each.titulo)){
+					$("#Content").append(
+						"<div class='post'><h1>"+each.titulo+"</h1>"+
+						"<a onclick='addToRemoved(\""+each.titulo+"\",this)'>remover</a>"+
+						"<br>"+each.texto
+					);
+				}
+			});
+		}).fail(function() {alert( "error" );});
+	}
+
+	appendBlog("bobagento");
+	appendBlog("naosalvo");
+</script>
+
+</body>
+</html>
